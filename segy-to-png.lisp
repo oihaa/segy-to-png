@@ -13,7 +13,9 @@
 		    collect (parse-integer f))))
       (setf (aref *cmap* i) vals))))
 
-(init-cmap "cmap.csv")
+
+(init-cmap  (merge-pathnames "cmap.csv"
+                   (asdf:system-source-directory :segy-to-png)))
 
 (defun stream-image-inline (out-stream filename lineno decimation)
   (segyio:with-inline (line-buffer filename lineno samples xlines decimation)
@@ -49,7 +51,7 @@
 		       do (zpng:write-pixel (list (scale (aref line-buffer i j )))  png)))
 	      (zpng:finish-png png))))))))
 
-#+nil (defun stream-image-xline (out-stream filename lineno decimation)
+(defun stream-image-xline (out-stream filename lineno decimation)
   (segyio:with-xline (line-buffer filename lineno samples inlines decimation)
     (let* ((inlines  (truncate (/ inlines decimation)))
 	   (size (* samples inlines)))
